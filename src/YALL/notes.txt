@@ -1,0 +1,17 @@
+For a good idea of what a linux library should look like (including namespaces, headers, usage, etc.)
+look at the SFML project. This is installed via 'sudo apt install libsfml-dev' on debian based systems
+and resides by default (I believe) in /usr/include/SFML/ (sudo find / -name "SFML").
+
+This library is made up of HPP files that show how to create and deploy a library as well as use a 
+namespace.
+
+
+Some resources:
+
+Cmake: 
+
++	https://stackoverflow.com/questions/17511496/how-to-create-a-shared-library-with-cmake
++  	https://cmake.org/cmake/help/latest/guide/tutorial/index.html
+
+G++ Linking:
++ https://stackoverflow.com/questions/27208932/link-so-file-to-cpp-file-via-g-compiling

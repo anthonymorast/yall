@@ -1,0 +1,12 @@
+yall.pc.in - a file that helps with loading/linking the library when compiling
+	- right now the executable must be compiled via 
+		"g++ `pkg-config --cflags --libs yall` name.cxx"
+	- pkg-config provides information stored in the yall.pc file (located somewhere on the disk)
+
+Linking Errors:
+	- for a time I was getting the executable to build but it wouldn't execute since the 
+	  linker couldn't find the libYALL.so.1 file. To fix this I ran "sudo ldconfig" and was
+	  able to get the thing to run.
+	- running "ldd <executable>" is a good way to debug this.
+
+
