@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 3.9)
 project(YALL VERSION 1.0.1 DESCRIPTION "Yet Another Learning Library")
 include(GNUInstallDirs)
 
+find_package(Armadillo REQUIRED)
+include_directories(${ARMADILLO_INCLUDE_DIRS})
+
 ## create shared library (.so file) which is the source code for the project
 add_library(YALL SHARED
 	src/YALL/Models/NeuralNet.cc
@@ -29,8 +32,14 @@ set_target_properties(YALL PROPERTIES
 configure_file(yall.pc.in yall.pc @ONLY)
 
 ## not 100% sure here
+## A good way to thinkg of this is that we're adding the second part (after the PRIVATE/PUBLIC/etc.)
+## as compiler flags in the Makefile with the first value as the target (YALL) which are just Makefile
+## targets.
 target_include_directories(YALL PRIVATE include)
 target_include_directories(YALL PRIVATE src)
+target_link_libraries(YALL PRIVATE ${ARMADILLO_LIBRARIES})
+## e.g. add the flag -Wno-psabi to the Makefile target YALL
+target_compile_options(YALL PRIVATE -Wno-psabi)
 
 ## Install the project shared library files and the PUBLIC HEADERS (files to be used by apps).
 install(TARGETS YALL 
