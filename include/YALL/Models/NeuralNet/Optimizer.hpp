@@ -21,10 +21,10 @@ namespace yall
 			virtual void calculate_updates(std::vector<arma::mat> weights, double *outputs, double* targets, 
 					std::vector<std::shared_ptr<Activation>> activations) = 0;
 			/*! A function to apply the _del_w weight updates. 
-			 */
+			*/
 			virtual void apply_updates(std::vector<arma::mat> &weights) = 0;
 			/*! A function that calculate weight update values and applies them.
-			 */
+			*/
 			void update_and_apply(std::vector<arma::mat> &weights, double* outputs, double* targets, 
 					std::vector<std::shared_ptr<Activation>> activations)
 			{
@@ -33,7 +33,7 @@ namespace yall
 			}
 
 			/*! A variable used to store the weight updates.
-			 */
+			*/
 			std::vector<arma::mat> _del_w;
 	};
 }

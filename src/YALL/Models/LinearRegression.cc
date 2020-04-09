@@ -12,7 +12,7 @@ namespace yall
 		_training_complete = true;
 	}
 
-	void LinearRegression::train(DataTable table)
+	void LinearRegression::train(DataTable table, std::string variable)
 	{
 		if(!table.has_response())
 		{
@@ -20,19 +20,17 @@ namespace yall
 			return;
 		}
 
-		if(table.ncols() > 2)
+		if(table.ncols() > 2 && variable == "")
 		{
-			std::cout << "ERROR: linear regerssion only fits one explanatory variable.\n"
-					  << "       Use multiple regression for more complex models.\n"
-					  << "       Data table has more than 2 columns for response and explanatory variables."
-					  << std::endl;
+			std::cout 
+				<< "ERROR: the data table has more than 2 columns or the response variable wasn't provided.\n"
+				<< "       Linear regerssion only fits one explanatory variable.\n"
+				<< "       Use multiple regression for more complex models."
+				<< std::endl;
 			return;
 		}
 
-		double** xs = table.get_all_explanatory();
-		double* y = table.get_response();
-		double* x = xs[0];
-		train(table.get_all_explanatory()[0], table.get_response(), table.nrows());
+		train(table.get_column(table.response_column() == 0 ? 1 : 0), table.get_response(), table.nrows());
 		_training_complete = true;
 	}
 

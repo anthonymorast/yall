@@ -4,7 +4,7 @@
 namespace yall
 {
 	// TODO: need to seriously test the DataTable class, there is a lot of stuff going on...
-	
+
 	DataTable::DataTable(){}
 
 	DataTable::DataTable(std::string csv_filename, std::string response_name, bool has_headers)
@@ -12,7 +12,7 @@ namespace yall
 		from_csv(csv_filename, response_name, has_headers);	// set data, ncols, nrows, response vars, and headers in here
 		_has_headers = has_headers;
 	}
-	
+
 	DataTable::DataTable(std::string* headers, std::string response_name, double** data, int nrows, int ncols, bool has_headers)
 	{
 		// TODO: should consider deep-copying the pointers in the constructors in case the user frees
@@ -27,11 +27,15 @@ namespace yall
 		_has_headers = has_headers;
 	}
 
+	/*! DataTable::DataTable(string*, int, double**, int, int, bool)
+	 *  When the response column number is passed into this constructor, it's assumed the user will use
+	 *  0-based notation. This is due to the fact that 0-based indexing is used in other get/print methods.
+	 */
 	DataTable::DataTable(std::string* headers, int response_column, double** data, int nrows, int ncols, bool has_headers)
 	{
 		_headers = headers;
 		_response_column = response_column;
-		_response = headers[response_column];
+		_response = headers[_response_column];
 		_data = data;
 		_rows = nrows;
 		_cols = ncols;
@@ -43,7 +47,7 @@ namespace yall
 	{
 		// TODO: ~DataTable(): should probably still free these... will need to pass back new arrays
 		// from the getters
-	//	delete[] _data;
+		//	delete[] _data;
 	}
 
 	bool DataTable::has_response()
@@ -95,7 +99,7 @@ namespace yall
 		{
 			_cols++;
 		}
-		
+
 		if(has_headers)		// read the header line if there is one
 		{
 			_headers = new std::string[_cols];
@@ -134,7 +138,7 @@ namespace yall
 		data_file.seekg(0, std::ios::beg);	// go to beginning of file
 		if(has_headers)
 			std::getline(data_file, line); // skip headers
-		
+
 		int row_count = 0;
 		while(std::getline(data_file, line)) 
 		{
@@ -214,7 +218,7 @@ namespace yall
 		}
 		return _data[row]; 
 	}
-	
+
 	double* DataTable::get_column(int column) 
 	{ 	
 		if(column >= _cols || column < 0)
@@ -225,13 +229,10 @@ namespace yall
 		}
 
 		double* col_data = new double[_rows];
-		std::cout << _rows << std::endl;
 		for(int i = 0; i < _rows; i++)
 		{
-			std::cout << i << std::endl;
 			col_data[i] = _data[i][column];
 		}
-		std::cout << "endddd" << std::endl;
 		return col_data; 
 	}
 
@@ -262,8 +263,11 @@ namespace yall
 		{
 			for(int j = 0; j < _cols; j++)
 			{
-				if(j != _response_column)
+				// TODO: consider using the trick where the response is moved to the first column (or last)
+				if(j < _response_column)
 					data[i][j] = _data[i][j];
+				else if(j > _response_column)	// use previous index after response column
+					data[i][j-1] = _data[i][j];
 			}
 		}
 		return data;
@@ -299,6 +303,12 @@ namespace yall
 			}
 			stream << std::endl;
 		}
+	}
+
+	void DataTable::print_shape(std::ostream& stream)
+	{
+		int* s = shape();
+		stream << "(" << s[0] << ", " << s[1] << ")" << std::endl;
 	}
 
 	void DataTable::print_column(std::ostream& stream, int column)
@@ -353,7 +363,7 @@ namespace yall
 		}
 		return _data[row]; 
 	}
-	
+
 	std::ostream& operator<<(std::ostream& os, const DataTable& table)
 	{
 		if(!table._data_loaded)

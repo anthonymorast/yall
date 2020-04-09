@@ -41,6 +41,7 @@ namespace yall
 			void print_column(std::ostream& stream, std::string column_name);
 			void print_row(std::ostream& stream, int row);
 			void print_headers(std::ostream& stream);
+			void print_shape(std::ostream& stream);
 
 			// overridden operators
 			double* operator[](int index) const;
@@ -50,6 +51,9 @@ namespace yall
 			bool has_response();
 			int nrows() { return _rows; }
 			int ncols() { return _cols; }
+			/*! Returns an array holding the shape shape[0] = rows, shape[1] = columns*/
+			int* shape() { return new int[2] { _rows, _cols }; }
+			int response_column() { return _response_column; }
 		private:
 			std::string* _headers = 0;
 			double** _data = 0;

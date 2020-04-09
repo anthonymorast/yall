@@ -46,6 +46,7 @@ int main()
 	string headers[2] = { "x", "y" };
 	yall::DataTable dt(headers, 1, data, n, 2, true);
 
+	cout << "get all" << endl;
 	double** d = dt.get_all_explanatory();
 	cout << "lreg here" << endl;
 

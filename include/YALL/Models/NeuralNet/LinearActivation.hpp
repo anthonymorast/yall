@@ -8,8 +8,8 @@ namespace yall
 	class LinearActivation: public Activation
 	{
 		public:
-		   	virtual void apply(arma::mat &input);
-	   		virtual void apply_derivative(arma::mat &input);		
+			virtual void apply(arma::mat &input);
+			virtual void apply_derivative(arma::mat &input);		
 	};
 
 	void LinearActivation::apply(arma::mat &input)

@@ -5,7 +5,7 @@ namespace yall
 {
 	class MultipleRegression 
 	{
-		
+
 	};
 }
 

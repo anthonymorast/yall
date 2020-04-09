@@ -10,4 +10,4 @@ if __name__ == '__main__':
                 if 'TODO' in line:
                     name = os.path.basename(f.name)
                     idx = line.index("TODO") + 4
-                    print("Found TODO (" + line[idx:].strip() + ") in " + name + ":" + str(num))
+                    print("Found TODO in " + name + ":" + str(num) + ";    (" + line[idx+1:].strip() + ")")

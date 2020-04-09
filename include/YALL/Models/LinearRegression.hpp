@@ -3,6 +3,7 @@
 
 #include <YALL/Utils/Statistics.hpp>
 #include <YALL/Utils/DataTable.hpp>
+#include <string>
 
 namespace yall
 {
@@ -10,7 +11,7 @@ namespace yall
 	{
 		public:
 			void train(double* x, double* y, int number_samples);	// least-squares optimization
-			void train(DataTable data);
+			void train(DataTable data, std::string variable="");
 			double* predict(double* x, int number_samples);
 			double get_alpha();
 			double get_beta();
