@@ -11,6 +11,9 @@ include_directories(${ARMADILLO_INCLUDE_DIRS})
 add_library(YALL SHARED
 	src/YALL/Models/NeuralNet.cc
 	src/YALL/Models/DecisionTree.cc
+	src/YALL/Models/LinearRegression.cc
+	src/YALL/Utils/Statistics.cc
+	src/YALL/Utils/DataTable.cc
 )
 
 ## create list of includes (public headers)
@@ -18,6 +21,8 @@ add_library(YALL SHARED
 set(PHEADERS 
 	"include/YALL/Models.hpp"
 	"include/YALL/Algorithms.hpp"
+	"include/YALL/Utils.hpp"
+	"include/YALL/Plot.hpp"
 )
 
 # some CMAKE config
@@ -41,7 +46,7 @@ target_link_libraries(YALL PRIVATE ${ARMADILLO_LIBRARIES})
 ## e.g. add the flag -Wno-psabi to the Makefile target YALL
 target_compile_options(YALL PRIVATE -Wno-psabi)
 
-## Install the project shared library files and the PUBLIC HEADERS (files to be used by apps).
+## Install the project shared library files and the PUBLIC HEADERS (files to be used by apps:).
 install(TARGETS YALL 
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/YALL
@@ -54,3 +59,5 @@ install(FILES ${CMAKE_BINARY_DIR}/yall.pc
 ## Need to copy these files to the include directories to be includeed by the public headers.
 install(DIRECTORY "include/YALL/Models/" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/YALL/Models)
 install(DIRECTORY "include/YALL/Algorithms/" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/YALL/Algorithms)
+install(DIRECTORY "include/YALL/Utils/" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/YALL/Utils)
+install(DIRECTORY "include/YALL/Plot/" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/YALL/Plot)

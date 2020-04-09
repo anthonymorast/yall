@@ -9,17 +9,32 @@ namespace yall
 	class SigmoidActivation : public Activation
 	{
 		public:
-			double* apply(double* input, int input_size);
+			virtual void apply(arma::mat &input);
+			virtual void apply_derivative(arma::mat &input);
+		private:
+			double logistic_sigmoid(double input);
 	};
 
-	double* SigmoidActivation::apply(double* input, int input_size)
+	void SigmoidActivation::apply(arma::mat &input)
 	{
-		double* output = new double[input_size];
-		for(int i = 0; i < input_size; i++) 
+		for(arma::mat::iterator it = input.begin(); it != input.end(); it++)
 		{
-			output[i] = (1/(1 + exp(input[i])));
+			(*it) = logistic_sigmoid(*it);
+		}	
+	}
+
+	void SigmoidActivation::apply_derivative(arma::mat &input)
+	{
+		for(arma::mat::iterator it = input.begin(); it != input.end(); it++)
+		{
+			double sigmoid = logistic_sigmoid((*it));
+			(*it) = sigmoid*(1-sigmoid);
 		}
-		return output;
+	}
+
+	double SigmoidActivation::logistic_sigmoid(double input)
+	{
+		return (1/(1+exp(input)));
 	}
 }
 

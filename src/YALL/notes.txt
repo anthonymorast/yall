@@ -10,8 +10,12 @@ Some resources:
 
 Cmake: 
 
-+	https://stackoverflow.com/questions/17511496/how-to-create-a-shared-library-with-cmake
-+  	https://cmake.org/cmake/help/latest/guide/tutorial/index.html
+	+	https://stackoverflow.com/questions/17511496/how-to-create-a-shared-library-with-cmake
+	+  	https://cmake.org/cmake/help/latest/guide/tutorial/index.html
 
 G++ Linking:
-+ https://stackoverflow.com/questions/27208932/link-so-file-to-cpp-file-via-g-compiling
+	+ https://stackoverflow.com/questions/27208932/link-so-file-to-cpp-file-via-g-compiling
+
+C++ Notes (Nice to know):
+	+ const after function => function cant change class data
+	+ const before function => returns reference to data that can't be changed.

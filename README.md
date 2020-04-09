@@ -14,6 +14,11 @@ An additional FYI, this is the first project I'm building using CMAKE. It's also
 	+ Depends on (Ubuntu versions): libopenblas-dev liblapack-dev libarpack2-dev libsuperlu-dev
 	+ Install Instructions for all Platforms: http://arma.sourceforge.net/download.html
 + CMAKE
++ Gnuplot
+	+ http://www.gnuplot.info/
+	+ Installing on Linux: should be available in whatever package manager is used for your distribution as 'gnuplot'
+	+ Installing on Windows
+		+ https://stackoverflow.com/questions/47453376/how-to-install-gnuplot-on-windows
 
 
 ## Save/Load Neural Network Weights

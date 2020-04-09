@@ -1,6 +1,8 @@
 #include <YALL/Models.hpp>
 #include <iostream>
 
+using namespace std;
+
 int main(int argc, char *argv[])
 {
 	double** inputs;
@@ -21,10 +23,24 @@ int main(int argc, char *argv[])
 		trainy[i][0] = i;
 	}
 
-	yall::SigmoidActivation act;
+	std::shared_ptr<yall::Activation> sigmoid = std::make_shared<yall::SigmoidActivation>();
+	std::shared_ptr<yall::Activation> linear = std::make_shared<yall::LinearActivation>();
+	std::shared_ptr<yall::Optimizer> gDesc = std::make_shared<yall::GradientDescent>(0.01);
 	yall::NeuralNet nn(2, 1);
-	nn.add_layer(10, act);
-	nn.train(inputs, trainy, 4);
+	nn.add_layer(3, sigmoid);				// add one hidden layer(s)
+	nn.add_layer(5, sigmoid);
+	nn.add_layer(1, linear);				// add output layer
+	nn.train(inputs, trainy, 4, gDesc, 10);
+
+	double** outputs = nn.predict(inputs, 4);
+	for(int i = 0; i < 4; i++)
+		cout << outputs[i][0] << endl;
+
+	nn.train(inputs, trainy, 4, gDesc, 10);
+
+	outputs = nn.predict(inputs, 4);
+	for(int i = 0; i < 4; i++)
+		cout << outputs[i][0] << endl;
 
 	return 0;
 }

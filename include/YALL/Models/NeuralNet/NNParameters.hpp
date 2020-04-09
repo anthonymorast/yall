@@ -11,6 +11,7 @@ namespace yall
 		int input_layer_size;
 		int output_layer_size;
 		int number_hidden_layers;
+		int learning_rate;
 	};
 }
 

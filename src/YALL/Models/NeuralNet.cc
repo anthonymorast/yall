@@ -9,14 +9,14 @@ NeuralNet::NeuralNet(int input_size, int output_size)
 {
 	_input_size = input_size;
 	_output_size = output_size;
+	arma::arma_rng::set_seed_random();
 }
 
-void NeuralNet::add_layer(int width, Activation activation, double** weights)
+void NeuralNet::add_layer(int width, std::shared_ptr<Activation> activation, double** weights)
 {
 	//TODO: check for appropraitely sized weight matrices
 	if(_training_complete)
 	{
-		// TODO: we could just remove the last matrix from the weights vector
 		// since this one would be the last hidden -> output.
 		std::cout << "Attemtped to add layers after training was complete!" << std::endl;
 		return;
@@ -24,7 +24,7 @@ void NeuralNet::add_layer(int width, Activation activation, double** weights)
 
 	// the rows in the weights matrix are either the input_size or the previous 
 	// layer depending on if this is the first layer.
-	int first_size = _hidden_layers == 0 ? _input_size : _hidden_layer_sizes.back();
+	int first_size = _layers == 0 ? _input_size : _layer_sizes.back();
 	arma::mat w;
 	if(weights != 0)
 	{
@@ -49,41 +49,54 @@ void NeuralNet::add_layer(int width, Activation activation, double** weights)
 
 	_weights.push_back(w);
 	_activations.push_back(activation);
-	_hidden_layer_sizes.push_back(width);
-	_hidden_layers++;
+	_layer_sizes.push_back(width);
+	_layers++;
 }
 
-void NeuralNet::train(double** inputs, double** outputs, int training_size, int batch_size)
+void NeuralNet::train(double** inputs, double** targets, int training_size, std::shared_ptr<Optimizer> optimizer, 
+		int epochs, int batch_size)
 {
-	// TODO: add functionality to set weights on final layer and set activation function...
-	// TODO: maybe just make the output layer added by the user as is done in Keras...
-	// add final layer to the weights; either from input -> output or last hidden -> output
-	int prev_size = _hidden_layers == 0 ? _input_size : _hidden_layer_sizes.back();
-	arma::mat w = arma::randu(prev_size, _output_size);
-	_weights.push_back(w);
-
-	// inputs is an array with each row being one example in the dataset
-	// Note: sample_count is updated in the batch loop.
-	for(int sample_count = 0; sample_count < training_size; )
+	if(!_layers)
 	{
-		//TODO: is my understanding of batching correct?
-		// if the # samples is not evenly divisible by the batch size, update batch size
-		batch_size = ((sample_count + batch_size) >= training_size) 
-						? (training_size - sample_count) 
-						: batch_size;
-		for(int batch_count = 0; batch_count < batch_size; batch_count++)
-		{
-			// crate row vector for sample
-			arma::mat sample(inputs[sample_count], 1, _input_size);
-			forward_prop(sample);
-			sample_count++;
-		}
+		std::cout << "The Neural Network doesn't have any layers!" << std::endl;
+		return;
 	}
 
-	// outputs is similarly defined except for target outputs (responses)
-	
+	batch_size = 1;		// TODO: remove when batching is implemented
+	_optimizer = optimizer;
+
+	for(int e_count = 0; e_count < epochs; e_count++)
+	{
+		for(int sample_count = 0; sample_count < training_size; /*None*/)
+		{
+			//TODO: is my understanding of batching correct? Don't allow batching until we know...
+			// if the # samples is not evenly divisible by the batch size, update batch size
+			batch_size = ((sample_count + batch_size) >= training_size) 
+							? (training_size - sample_count) 
+							: batch_size;
+			for(int batch_count = 0; batch_count < batch_size; batch_count++)
+			{
+				arma::mat sample(inputs[sample_count], 1, _input_size);
+				double* output = forward_prop(sample);
+				optimize(targets[sample_count], output);
+				sample_count++;
+			}
+		}	
+	}
 	
 	_training_complete = true;
+}
+
+double** NeuralNet::predict(double** inputs, int number_samples)
+{
+	double** outputs = new double*[number_samples];
+	for(int i = 0; i < number_samples; i++)
+	{
+		arma::mat sample(inputs[i], 1, _input_size);
+		outputs[i] = forward_prop(sample);
+	}
+
+	return outputs;
 }
 
 void NeuralNet::save_weights(std::string model_name)
@@ -106,25 +119,35 @@ void NeuralNet::save_weights(std::string model_name)
 
 void NeuralNet::load_weights(std::string filename)
 {
-	std::cout << "Loading weights is ot implemented." << std::endl;
+	std::cout << "Loading weights is not implemented." << std::endl;
 }
 
 /** Private Methods **/
-void NeuralNet::forward_prop(arma::mat sample)
+double* NeuralNet::forward_prop(arma::mat sample)
 {
-	// send inputs forward through the array
-	std::cout << "You're propagating!" << std::endl;
-	for(int i = 0; i < _hidden_layers; i++)
+	double* outputs = new double[_output_size];
+	arma::mat last = sample;
+	for(int i = 0; i < _layers; i++)
 	{
-		
+		last *= _weights[i];
+		_activations[i]->apply(last);
 	}
+	
+	// last should be a vector
+	int count = 0;
+	for(arma::mat::iterator it = last.begin(); it != last.end(); it++)
+	{
+		outputs[count] = (*it);
+		count++;
+	}
+
+	return outputs;
 }
 
-void NeuralNet::back_prop(double* target)
+void NeuralNet::optimize(double* target, double* output)
 {
-	std::cout << "You're propagating, but in reverse!" << std::endl;
-	// calculate loss
-	// use backprop class to calculate and apply weight updates
+	// rely on the BackPropagation class implementations to do the heavy lifting
+	_optimizer->update_and_apply(_weights, output, target, _activations); 
 }
 
 }
