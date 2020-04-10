@@ -1,6 +1,6 @@
 CFLAGS=-lYALL --std=c++11 -Wno-psabi
 
-all: NeuralNet armadillo_test stats linreg dt
+all: NeuralNet armadillo_test stats linreg dt mr
 
 armadillo_test:
 	g++ armadillo_test.cpp -larmadillo -o armadillo_test
@@ -16,6 +16,9 @@ linreg:
 
 dt:
 	g++ $(CFLAGS) -o dt DataTableTest.cpp
+
+mr:
+	g++ $(CFLAGS) -o mr MultipleRegressionTest.cpp
 
 clean:
 	rm -rf *.o stats linreg nn armadillo_test

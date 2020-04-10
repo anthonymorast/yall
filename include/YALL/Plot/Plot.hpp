@@ -5,11 +5,11 @@
 
 namespace yall
 {
-	class Plot
-	{
-		public:
-			void plot_points(double* x, double* y, PlotParams parameters);
-	};
+    class Plot
+    {
+        public:
+            void plot_points(double* x, double* y, PlotParams parameters);
+    };
 }
 
 #endif

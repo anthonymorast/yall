@@ -5,11 +5,11 @@
 
 namespace yall
 {
-	struct PlotParams
-	{
-		std::string title;
+    struct PlotParams
+    {
+        std::string title;
 
-	};
+    };
 }
 
 #endif

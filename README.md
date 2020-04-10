@@ -19,6 +19,9 @@ An additional FYI, this is the first project I'm building using CMAKE. It's also
 	+ Installing on Linux: should be available in whatever package manager is used for your distribution as 'gnuplot'
 	+ Installing on Windows
 		+ https://stackoverflow.com/questions/47453376/how-to-install-gnuplot-on-windows
++ C++11
+    + The library will might work with older versions of C++ but I'm compiling my tests with
+        --std=c++11
 
 
 ## Save/Load Neural Network Weights

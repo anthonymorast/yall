@@ -12,6 +12,7 @@ add_library(YALL SHARED
 	src/YALL/Models/NeuralNet.cc
 	src/YALL/Models/DecisionTree.cc
 	src/YALL/Models/LinearRegression.cc
+    src/YALL/Models/MultipleRegression.cc
 	src/YALL/Utils/Statistics.cc
 	src/YALL/Utils/DataTable.cc
 )
