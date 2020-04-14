@@ -1,14 +1,15 @@
 #ifndef YALL_NN
 #define YALL_NN
 
-#include <YALL/Models/NeuralNet/NNParameters.hpp>
-#include <YALL/Models/NeuralNet/Activation.hpp>
 #include <YALL/Models/NeuralNet/Optimizer.hpp>
+#include <YALL/Models/NeuralNet/Layer.hpp>
 
 #include <armadillo>
 #include <vector>
 #include <string>
 #include <memory>	// smart pointers
+#include <iostream>
+#include <fstream>
 
 namespace yall
 {
@@ -32,13 +33,11 @@ namespace yall
             int _training_step_size = 1;			// TODO: implement training step size logic
 
             // _layers and _layer_sizes contain the output layer
-            int _layers = 0;
-            std::vector<int> _layer_sizes;   		// width of each layer except the input layer
-            std::vector<arma::mat> _weights;		// vector of matrices that to define matrix mult between layers
+            int _layer_count = 0;
             double* _biases;						// not implemented
+            std::vector<Layer> _layers;
 
             // pointers for object slicing: https://stackoverflow.com/questions/8777724/store-derived-class-objects-in-base-class-variables	
-            std::vector<std::shared_ptr<Activation>> _activations;	// one activation per layer
             std::shared_ptr<Optimizer> _optimizer;
 
             /* Private Methods */

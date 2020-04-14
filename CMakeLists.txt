@@ -10,11 +10,14 @@ include_directories(${ARMADILLO_INCLUDE_DIRS})
 ## create shared library (.so file) which is the source code for the project
 add_library(YALL SHARED
 	src/YALL/Models/NeuralNet.cc
+    src/YALL/Models/Layer.cc
 	src/YALL/Models/DecisionTree.cc
 	src/YALL/Models/LinearRegression.cc
     src/YALL/Models/MultipleRegression.cc
+    src/YALL/Models/LogisticRegression.cc
 	src/YALL/Utils/Statistics.cc
 	src/YALL/Utils/DataTable.cc
+    src/YALL/Utils/StringUtils.cc
 )
 
 ## create list of includes (public headers)

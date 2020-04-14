@@ -1,12 +1,15 @@
 #ifndef YALL_UTILS_DATA_TAB
 #define YALL_UTILS_DATA_TAB
 
+#include <YALL/Utils/StringUtils.hpp>
+
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <exception>
 #include <iostream>
 #include <cstring>
+#include <random>
 
 namespace yall 
 {
@@ -34,9 +37,9 @@ namespace yall
             double* get_column(std::string column_name);
             double* get_response();
             double** get_all_explanatory();
-            double** select_columns(int* column_numbers, int number_columns);
-            double** select_columns(std::string* variables, int number_cols);
-            double** select_rows(int* row_numbers, int number_rows);
+            DataTable select_columns(int* column_numbers, int number_columns);
+            DataTable select_columns(std::string* variables, int number_cols);
+            DataTable select_rows(int* row_numbers, int number_rows);
             std::string get_header_at(int col);
             std::string* get_headers();
             std::string* get_explanatory_headers();
@@ -53,7 +56,7 @@ namespace yall
             void drop_columns(int* columns, int count);
             void drop_columns(std::string* column_names, int count);
             void drop_rows(int* rows, int count);
-            void shuffle_rows();
+            void shuffle_rows(int passes=100);
 
             // overridden operators
             double* operator[](int index) const;
@@ -74,6 +77,7 @@ namespace yall
             int _response_column = 0;
             bool _data_loaded = false;
             bool _has_headers = false;
+            StringUtils _str_utils;
 
             int get_column_from_header(std::string header);
     };

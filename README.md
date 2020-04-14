@@ -1,7 +1,7 @@
 # YALL (Yet Another Learning Library)
 
 YALL is a C++ library that implements many machine learning algorithms and attempts not to use company or platform specific libraries. That is, 
-the goal of YALL is to usable on Windows, Linux, Mac, Raspberry Pi, etc. without a lot of installation and headaches. 
+the goal of YALL is to be readily usable on Windows, Linux, Mac, Raspberry Pi, etc. without a lot of installation and headaches. 
 
 There are many great machine learning libraries out there that do many things, probably more efficiently than YALL. The primary purpose of this
 library is for my own personal experience with a secondary purpose of being portable, useful, and efficient
@@ -27,12 +27,6 @@ An additional FYI, this is the first project I'm building using CMAKE. It's also
 ## Save/Load Neural Network Weights
 
 ### File Structure
-Line 1: Input size
-Line 2: Output size
-Line 3: Number of hidden layers (*h*)
-Line 4: *h* values separater by a space to define the layer widths
-Lines 5-(5+*h*): one line for each weight matrix associated with the *h* hidden layers
-
 
 
 ## Custom Neural Network Activation Functions

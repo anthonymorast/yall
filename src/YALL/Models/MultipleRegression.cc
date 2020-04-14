@@ -62,7 +62,8 @@ namespace yall
 
     double* MultipleRegression::predict(DataTable t)
     {
-        if(t.ncols() != _beta_size)
+        // -1 for response
+        if(t.ncols()-1 != _beta_size)
         {
             std::cout << "ERROR (MulipleRegression): data table columns do not match number "
                 << "of explanatory variables used for training." 

@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
 	std::shared_ptr<yall::Activation> sigmoid = std::make_shared<yall::SigmoidActivation>();
 	std::shared_ptr<yall::Activation> linear = std::make_shared<yall::LinearActivation>();
-	std::shared_ptr<yall::Optimizer> gDesc = std::make_shared<yall::GradientDescent>(0.01);
+	std::shared_ptr<yall::Optimizer> gDesc = std::make_shared<yall::BackPropagation>(0.01);
 	yall::NeuralNet nn(2, 1);
 	nn.add_layer(3, sigmoid);				// add one hidden layer(s)
 	nn.add_layer(5, sigmoid);
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 	for(int i = 0; i < 4; i++)
 		cout << outputs[i][0] << endl;
 
-	nn.train(inputs, trainy, 4, gDesc, 10);
+	nn.train(inputs, trainy, 4, gDesc, 1);
 
 	outputs = nn.predict(inputs, 4);
 	for(int i = 0; i < 4; i++)

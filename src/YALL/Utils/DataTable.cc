@@ -9,6 +9,7 @@ namespace yall
 
     DataTable::DataTable(std::string csv_filename, std::string response_name, bool has_headers)
     {
+        response_name = _str_utils.trim(response_name);
         from_csv(csv_filename, response_name, has_headers);	// set data, ncols, nrows, response vars, and headers in here
         _has_headers = has_headers;
     }
@@ -17,6 +18,7 @@ namespace yall
     {
         // TODO: should consider deep-copying the pointers in the constructors in case the user frees
         // memory we're using
+        _str_utils.trim_all(headers, ncols);
         _cols = ncols;
         _rows = nrows;
         _data = data;
@@ -33,6 +35,7 @@ namespace yall
      */
     DataTable::DataTable(std::string* headers, int response_column, double** data, int nrows, int ncols, bool has_headers)
     {
+        _str_utils.trim_all(headers, ncols);
         _headers = headers;
         _response_column = response_column;
         _response = headers[_response_column];
@@ -108,6 +111,7 @@ namespace yall
             int count = 0;
             while(std::getline(ss_headers, value, ','))
             {
+                value = _str_utils.trim(value);
                 if(!response_found && !std::strcmp(value.c_str(), response.c_str()))
                 {
                     response_found = true;
@@ -244,7 +248,7 @@ namespace yall
 
     double* DataTable::get_response()
     {
-        if(!std::strcmp(_response.c_str(), ""))
+        if(!has_response())
         {
             std::cout << "ERROR: response variable not set." << std::endl;
             return 0;
@@ -273,13 +277,15 @@ namespace yall
         return data;
     }
 
-    double** DataTable::select_columns(int* column_numbers, int number_columns)
+    DataTable DataTable::select_columns(int* column_numbers, int number_columns)
     {
         double** data = new double*[_rows];
         for(int i = 0; i < _rows; i++)
             data[i] = new double[number_columns];
 
         int col_count = -1;
+        bool keep_response = false;
+        std::string* headers = new std::string[number_columns];
         for(int j = 0; j < _cols; j++)      // swap loops to minimize number of k loops.
         {
             bool use_col = false;
@@ -288,27 +294,32 @@ namespace yall
                 if(j == column_numbers[k])
                 {
                     use_col = true;
+                    if(j == _response_column)
+                        keep_response = true;
                     col_count++;
                     break;
                 }
             }
 
-            for(int i = 0; i < _rows; i++)
+            if(use_col)
             {
-                if(use_col)
+                for(int i = 0; i < _rows; i++)
                     data[i][col_count] = _data[i][j];
+                headers[col_count] = _headers[j];
             }
         }
 
-        return data;
+        DataTable new_data(headers, (keep_response ? _response : ""), data, _rows, number_columns);
+        return new_data;
     }
 
-    double** DataTable::select_columns(std::string* variables, int number_cols)
+    DataTable DataTable::select_columns(std::string* variables, int number_cols)
     {
         if(!_has_headers)
         {   
             std::cout << "ERROR: attempting to select columns by header values on headerless data table." << std::endl;
-            return 0;
+            DataTable e;
+            return e;
         }   
         
         int* column_numbers = new int[number_cols];
@@ -318,7 +329,7 @@ namespace yall
         return select_columns(column_numbers, number_cols);
     }
     
-    double** DataTable::select_rows(int* row_numbers, int number_rows)
+    DataTable DataTable::select_rows(int* row_numbers, int number_rows)
     {
         double** data = new double*[number_rows];
         for(int i = 0; i < number_rows; i++)
@@ -339,7 +350,8 @@ namespace yall
             }
         }
 
-        return data;
+        DataTable new_dt(_headers, _response, data, number_rows, _cols);
+        return new_dt;
     }
 
 
@@ -605,8 +617,25 @@ namespace yall
         return return_values;
     }
 
-    void DataTable::shuffle_rows()
+    void DataTable::shuffle_rows(int passes)
     {
-        std::cout << "NOT IMPLEMENTED" << std::endl;
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::uniform_int_distribution<int> distribution(0, _rows-1);
+        
+        double *temp;
+        for(int i = 0; i < passes; i++)
+        {
+            for(int j = 0; j < _rows; j++)
+            {
+                int r1 = distribution(g);
+                int r2 = distribution(g);
+
+                temp = _data[r1];
+                _data[r1] = _data[r2];
+                _data[r2] = temp;
+            }
+        }
+
     }
 }

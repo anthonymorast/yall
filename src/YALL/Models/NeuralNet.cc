@@ -1,6 +1,4 @@
 #include <YALL/Models/NeuralNet/NeuralNet.hpp>
-#include <iostream>
-#include <fstream>
 
 namespace yall
 {
@@ -22,41 +20,16 @@ namespace yall
             return;
         }
 
-        // the rows in the weights matrix are either the input_size or the previous 
-        // layer depending on if this is the first layer.
-        int first_size = _layers == 0 ? _input_size : _layer_sizes.back();
-        arma::mat w;
-        if(weights != 0)
-        {
-            // TODO: test the weight loading in add_layer() 
-            // flatten the array 
-            double *w_vals = new double[first_size * width];
-            for(int i = 0; i < first_size; i++)
-            {
-                for(int j = 0; j < width; j++)
-                {
-                    w_vals[(width*i) + j] = weights[i][j];
-                }
-            }
-            // use the supplied weights to initialize the matrix
-            w = arma::mat(w_vals, first_size, width);
-            delete[] w_vals;
-        }
-        else 
-        {	
-            w = arma::randu(first_size, width);
-        }
-
-        _weights.push_back(w);
-        _activations.push_back(activation);
-        _layer_sizes.push_back(width);
-        _layers++;
+        int prev_size = (_layer_count == 0) ? _input_size : _layers.back().layer_width();
+        Layer l(width, prev_size, activation, weights);
+        _layers.push_back(l);
+        _layer_count++;
     }
 
     void NeuralNet::train(double** inputs, double** targets, int training_size, std::shared_ptr<Optimizer> optimizer, 
             int epochs, int batch_size)
     {
-        if(!_layers)
+        if(!_layer_count)
         {
             std::cout << "The Neural Network doesn't have any layers!" << std::endl;
             return;
@@ -76,7 +49,7 @@ namespace yall
                     : batch_size;
                 for(int batch_count = 0; batch_count < batch_size; batch_count++)
                 {
-                    arma::mat sample(inputs[sample_count], 1, _input_size);
+                    arma::mat sample(inputs[sample_count], _input_size, 1);
                     double* output = forward_prop(sample);
                     optimize(targets[sample_count], output);
                     sample_count++;
@@ -92,7 +65,7 @@ namespace yall
         double** outputs = new double*[number_samples];
         for(int i = 0; i < number_samples; i++)
         {
-            arma::mat sample(inputs[i], 1, _input_size);
+            arma::mat sample(inputs[i], _input_size, 1);
             outputs[i] = forward_prop(sample);
         }
 
@@ -127,10 +100,9 @@ namespace yall
     {
         double* outputs = new double[_output_size];
         arma::mat last = sample;
-        for(int i = 0; i < _layers; i++)
+        for(auto it = _layers.begin(); it != _layers.end(); it++)
         {
-            last *= _weights[i];
-            _activations[i]->apply(last);
+            last = (*it).feed_forward(last);
         }
 
         // last should be a vector
@@ -147,7 +119,7 @@ namespace yall
     void NeuralNet::optimize(double* target, double* output)
     {
         // rely on the BackPropagation class implementations to do the heavy lifting
-        _optimizer->update_and_apply(_weights, output, target, _activations); 
+        _optimizer->update_and_apply(_layers, output, target, _output_size); 
     }
 
 }

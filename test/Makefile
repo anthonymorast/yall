@@ -1,4 +1,4 @@
-CFLAGS=-lYALL --std=c++11 -Wno-psabi
+CFLAGS=-lYALL --std=c++11 -Wno-psabi -larmadillo
 
 all: NeuralNet armadillo_test stats linreg dt mr
 
