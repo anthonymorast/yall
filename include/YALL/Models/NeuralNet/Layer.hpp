@@ -24,6 +24,7 @@ namespace yall
         private:
             arma::mat _last_output;
             arma::mat _last_input;
+            arma::mat _last_activation;
             int _width;
             std::shared_ptr<Activation> _activation;
             arma::mat _deltas;

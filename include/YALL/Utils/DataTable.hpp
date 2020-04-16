@@ -40,6 +40,9 @@ namespace yall
             DataTable select_columns(int* column_numbers, int number_columns);
             DataTable select_columns(std::string* variables, int number_cols);
             DataTable select_rows(int* row_numbers, int number_rows);
+            DataTable top_n_rows(int n);
+            DataTable bottom_n_rows(int n);
+            DataTable select_row_range(int start, int end);
             std::string get_header_at(int col);
             std::string* get_headers();
             std::string* get_explanatory_headers();

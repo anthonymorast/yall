@@ -13,6 +13,7 @@ namespace yall
             {
                 for(int j = 0; j < width; j++)
                 {
+                    std::cout << i << ", j=" << j << std::endl;
                     w_vals[(width*i) + j] = weights[i][j];
                 }
             }
@@ -47,7 +48,7 @@ namespace yall
 
     arma::mat Layer::apply_activation_derivative()
     {
-        arma::mat ret(_last_output);
+        arma::mat ret(_last_activation);
         _activation->apply_derivative(ret);
         return ret;
     }
@@ -55,9 +56,10 @@ namespace yall
     arma::mat Layer::feed_forward(arma::mat input)
     {
         arma::mat output = _weights*input;
+        _last_activation = arma::mat(output);
         _activation->apply(output);
-        _last_output = arma::mat(output);
         _last_input = arma::mat(input);
+        _last_output = arma::mat(output);
         return output;    
     }
 

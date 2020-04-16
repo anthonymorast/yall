@@ -354,6 +354,35 @@ namespace yall
         return new_dt;
     }
 
+    DataTable DataTable::top_n_rows(int n)
+    {
+        return select_row_range(0, n);
+    }
+
+    DataTable DataTable::bottom_n_rows(int n)
+    {
+        return select_row_range(_rows - n, _rows);
+    }
+
+    DataTable DataTable::select_row_range(int start, int end)
+    {
+        if(end < start)
+        {
+            std::cout << "ERROR (DataTable): row range end is before range start." << std::endl;
+            return DataTable();
+        }
+
+        int size = end - start;
+        int* rows = new int[size];
+        for(int i = 0; i < size; i++)
+        {
+            rows[i] = (i + start);
+        }
+
+        DataTable return_table = select_rows(rows, size);
+        delete[] rows;
+        return return_table;
+    }
 
     void DataTable::print(std::ostream& stream)
     {	

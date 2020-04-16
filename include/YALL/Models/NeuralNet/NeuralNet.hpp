@@ -3,6 +3,7 @@
 
 #include <YALL/Models/NeuralNet/Optimizer.hpp>
 #include <YALL/Models/NeuralNet/Layer.hpp>
+#include <YALL/Utils/DataTable.hpp>
 
 #include <armadillo>
 #include <vector>
@@ -20,8 +21,10 @@ namespace yall
             /* Public methods */
             NeuralNet(int input_size, int output_size);
             void add_layer(int width, std::shared_ptr<Activation> activation, double** weights = 0);
+            void train(DataTable table, std::shared_ptr<Optimizer> optimizer, int epochs, int batch_size=1, double** multi_response=0);
             void train(double** inputs, double** outputs, int training_samples, std::shared_ptr<Optimizer> optmizer, 
                     int epochs, int batch_size=1);
+            double** predict(DataTable table);
             double** predict(double** samples, int number_samples);
             void save_weights(std::string filename);
             void load_weights(std::string filename);

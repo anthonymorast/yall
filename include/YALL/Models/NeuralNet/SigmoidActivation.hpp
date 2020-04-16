@@ -25,11 +25,14 @@ namespace yall
 
     void SigmoidActivation::apply_derivative(arma::mat &input)
     {
-        for(arma::mat::iterator it = input.begin(); it != input.end(); it++)
+        std::cout << "before sig: " << std::endl;
+        input.print(std::cout);
+        for(auto it = input.begin(); it != input.end(); it++)
         {
-            double sigmoid = logistic_sigmoid((*it));
-            (*it) = sigmoid*(1-sigmoid);
+            (*it) = logistic_sigmoid((*it)) * (1 - logistic_sigmoid((*it)));
         }
+        std::cout << "apply sig: " << std::endl;
+        input.print(std::cout);
     }
 
     double SigmoidActivation::logistic_sigmoid(double input)

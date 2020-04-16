@@ -44,6 +44,7 @@ int main()
     mr.print_equation(cout);
 
     DataTable iris("iris.data", "class");
+    iris.print(cout);
     iris.shuffle_rows();
 
     int train_count = iris.nrows() * 0.8;
@@ -77,6 +78,11 @@ int main()
     MultipleRegression iris_mr;
     mr.train(train);
     double* yhat = mr.predict(test);
+
+    for(int i = 0; i < test_count; i++)
+    {
+        cout << "Actual: " << train.get_response()[i] << "\tPredicted: " << yhat[i] << endl;
+    }
     Statistics stats;
     cout << "Error: " << stats.mean_squared_error(yhat, test.get_response(), test_count) << endl;
 

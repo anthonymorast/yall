@@ -2,7 +2,6 @@
 
 namespace yall
 {
-
     NeuralNet::NeuralNet(int input_size, int output_size)
     {
         _input_size = input_size;
@@ -22,8 +21,30 @@ namespace yall
 
         int prev_size = (_layer_count == 0) ? _input_size : _layers.back().layer_width();
         Layer l(width, prev_size, activation, weights);
+        l.get_weights().print(std::cout);
         _layers.push_back(l);
         _layer_count++;
+    }
+
+    void NeuralNet::train(DataTable table, std::shared_ptr<Optimizer> optimizer, int epochs, int batch_size, double** multi_response)
+    {
+        double** response;
+        if(multi_response != 0)     // e.g one-hot
+        {
+            response = multi_response;
+        }
+        else                        // single output neuron
+        {
+            response = new double*[table.nrows()];
+            for(int i = 0; i < table.nrows(); i++)
+            {
+                response[i] = new double[1];
+                response[i][0] = table.get_response()[i];
+            }
+        }
+
+        train(table.get_all_explanatory(), response, table.nrows(), optimizer, epochs, batch_size);
+        delete[] response;
     }
 
     void NeuralNet::train(double** inputs, double** targets, int training_size, std::shared_ptr<Optimizer> optimizer, 
@@ -44,6 +65,7 @@ namespace yall
             {
                 //TODO: is my understanding of batching correct? Don't allow batching until we know...
                 // if the # samples is not evenly divisible by the batch size, update batch size
+                // NOTE: it was, just need to implement
                 batch_size = ((sample_count + batch_size) >= training_size) 
                     ? (training_size - sample_count) 
                     : batch_size;
@@ -58,6 +80,11 @@ namespace yall
         }
 
         _training_complete = true;
+    }
+
+    double** NeuralNet::predict(DataTable table)
+    {
+        return predict(table.get_all_explanatory(), table.nrows());
     }
 
     double** NeuralNet::predict(double** inputs, int number_samples)
@@ -100,9 +127,16 @@ namespace yall
     {
         double* outputs = new double[_output_size];
         arma::mat last = sample;
+        std::cout << "input shape: " << sample.n_rows << ", " << sample.n_cols << std::endl;
         for(auto it = _layers.begin(); it != _layers.end(); it++)
         {
+            std::cout << "forward pass: " << (*it).layer_width() << std::endl;
+            last.print(std::cout);
             last = (*it).feed_forward(last);
+            std::cout << "layer weights: " << (*it).get_weights().n_rows << ", " << (*it).get_weights().n_cols << std::endl;
+            (*it).get_weights().print(std::cout);
+            std::cout << "after mult:" << std::endl;
+            last.print(std::cout);
         }
 
         // last should be a vector
