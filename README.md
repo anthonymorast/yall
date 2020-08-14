@@ -10,6 +10,8 @@ An additional FYI, this is the first project I'm building using CMAKE. It's also
 
 ## Dependencies
 
++ C++ DataTables
+	+ Install instructions and repository: http://www.github.com/anthonymorast/DataTables
 + Armadillo (built with 9.860.1)
 	+ Depends on (Ubuntu versions): libopenblas-dev liblapack-dev libarpack2-dev libsuperlu-dev
 	+ Install Instructions for all Platforms: http://arma.sourceforge.net/download.html
