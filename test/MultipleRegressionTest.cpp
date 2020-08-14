@@ -1,9 +1,12 @@
 #include <YALL/Models.hpp>
+#include <DataTable/DataTable.hpp>
+
 #include <iostream>
 #include <string>
 
 using namespace std;
 using namespace yall;
+using namespace datatable;
 
 int main()
 {

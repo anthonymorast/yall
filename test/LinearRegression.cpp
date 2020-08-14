@@ -2,6 +2,8 @@
 #include <YALL/Plot.hpp>
 #include <YALL/Utils.hpp>
 
+#include <DataTable/DataTable.hpp>
+
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
@@ -44,7 +46,7 @@ int main()
 		data[i][1] = y[i];
 	}
 	string headers[2] = { "x", "y" };
-	yall::DataTable dt(headers, 1, data, n, 2, true);
+	datatable::DataTable dt(headers, 1, data, n, 2, true);
 
 	cout << "get all" << endl;
 	double** d = dt.get_all_explanatory();

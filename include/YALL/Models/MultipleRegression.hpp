@@ -1,9 +1,11 @@
 #ifndef YALL_MULTI_REG
 #define YALL_MULTI_REG
 
-#include <YALL/Utils/DataTable.hpp>
+#include <DataTable/DataTable.hpp>
 #include <string>
 #include <armadillo>
+
+using namespace datatable;
 
 namespace yall 
 {

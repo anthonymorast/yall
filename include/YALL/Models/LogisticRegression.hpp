@@ -1,12 +1,13 @@
 #ifndef YALL_MODELS_LOG_REGRESSION
 #define YALL_MODELS_LOG_REGRESSION
 
-#include <YALL/Utils/DataTable.hpp>
+#include <DataTable/DataTable.hpp>
 #include <YALL/Utils/Statistics.hpp>
+
+using namespace datatable;
 
 namespace yall
 {
-
     class LogisticRegression
     {
         public:

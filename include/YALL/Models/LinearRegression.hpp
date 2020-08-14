@@ -2,8 +2,10 @@
 #define YALL_LIN_REG
 
 #include <YALL/Utils/Statistics.hpp>
-#include <YALL/Utils/DataTable.hpp>
+#include <DataTable/DataTable.hpp>
 #include <string>
+
+using namespace datatable;
 
 namespace yall
 {
