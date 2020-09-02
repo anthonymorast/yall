@@ -1,5 +1,6 @@
 #include <YALL/Models.hpp>
 #include <YALL/Utils.hpp>
+#include <DataTable/DataTable.hpp>
 #include <iostream>
 
 using namespace std;
@@ -59,13 +60,13 @@ int main(int argc, char *argv[])
 /*
     cout << "\n\n--------------------IRIS--------------------\n\n";
 
-    yall::DataTable table("iris.data", "class");
+    datatable::DataTable table("iris.data", "class");
     table.shuffle_rows();
     int train_size = table.nrows() * 0.8;
     int test_size = table.nrows() - train_size;
 
-    yall::DataTable train = table.select_row_range(0, train_size);
-    yall::DataTable test = table.select_row_range(train_size, table.nrows());
+    datatable::DataTable train = table.select_row_range(0, train_size);
+    datatable::DataTable test = table.select_row_range(train_size, table.nrows());
 
     train.print_shape(cout);
     test.print_shape(cout);

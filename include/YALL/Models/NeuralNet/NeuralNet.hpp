@@ -3,7 +3,7 @@
 
 #include <YALL/Models/NeuralNet/Optimizer.hpp>
 #include <YALL/Models/NeuralNet/Layer.hpp>
-#include <YALL/Utils/DataTable.hpp>
+#include <DataTable/DataTable.hpp>
 
 #include <armadillo>
 #include <vector>
@@ -11,6 +11,8 @@
 #include <memory>	// smart pointers
 #include <iostream>
 #include <fstream>
+
+using namespace datatable;
 
 namespace yall
 {

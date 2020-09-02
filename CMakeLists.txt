@@ -7,6 +7,9 @@ include(GNUInstallDirs)
 find_package(Armadillo REQUIRED)
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
+#find_package(DataTable REQUIRED)
+#include_directories(${DATA_TABLE_INCLUDE_DIRS})
+
 ## create shared library (.so file) which is the source code for the project
 add_library(YALL SHARED
 	src/YALL/Models/NeuralNet.cc
@@ -16,8 +19,6 @@ add_library(YALL SHARED
     src/YALL/Models/MultipleRegression.cc
     src/YALL/Models/LogisticRegression.cc
 	src/YALL/Utils/Statistics.cc
-	src/YALL/Utils/DataTable.cc
-    src/YALL/Utils/StringUtils.cc
 )
 
 ## create list of includes (public headers)
@@ -46,7 +47,8 @@ configure_file(yall.pc.in yall.pc @ONLY)
 ## targets.
 target_include_directories(YALL PRIVATE include)
 target_include_directories(YALL PRIVATE src)
-target_link_libraries(YALL PRIVATE ${ARMADILLO_LIBRARIES})
+target_link_libraries(YALL PRIVATE ${armadillo_libraries})
+#target_link_libraries(yall private ${data_table_libraries})
 ## e.g. add the flag -Wno-psabi to the Makefile target YALL
 target_compile_options(YALL PRIVATE -Wno-psabi)
 

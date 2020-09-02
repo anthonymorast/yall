@@ -10,6 +10,8 @@ An additional FYI, this is the first project I'm building using CMAKE. It's also
 
 ## Dependencies
 
++ C++ DataTables
+	+ Install instructions and repository: http://www.github.com/anthonymorast/DataTables
 + Armadillo (built with 9.860.1)
 	+ Depends on (Ubuntu versions): libopenblas-dev liblapack-dev libarpack2-dev libsuperlu-dev
 	+ Install Instructions for all Platforms: http://arma.sourceforge.net/download.html
@@ -20,9 +22,11 @@ An additional FYI, this is the first project I'm building using CMAKE. It's also
 	+ Installing on Windows
 		+ https://stackoverflow.com/questions/47453376/how-to-install-gnuplot-on-windows
 + C++11
-    + The library will might work with older versions of C++ but I'm compiling my tests with
+    + The library might work with older versions of C++ but I'm compiling my tests with
         --std=c++11
 
+
+# IN PROGRESS
 
 ## Save/Load Neural Network Weights
 
