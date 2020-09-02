@@ -7,6 +7,14 @@ namespace yall
 
     DataTable::DataTable(){}
 
+    DataTable::DataTable(double** data, int nrows, int ncols) 
+    {
+        _data = data;
+        _cols = ncols;
+        _rows = nrows;
+        _data_loaded = true;
+    }
+
     DataTable::DataTable(std::string csv_filename, std::string response_name, bool has_headers)
     {
         response_name = _str_utils.trim(response_name);
@@ -129,7 +137,7 @@ namespace yall
         }
 
         // process the remainder of the data file; first need to get rowcount to allocate memory
-        _rows = 1;	// first line above
+        _rows = 0;
         while(std::getline(data_file, line))
         {
             _rows++;

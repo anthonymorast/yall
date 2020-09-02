@@ -6,19 +6,20 @@ armadillo_test:
 	g++ armadillo_test.cpp -larmadillo -o armadillo_test
 
 NeuralNet:
-	g++ $(CFLAGS) -o nn NeuralNetTest.cpp
+	g++ -o nn NeuralNetTest.cpp $(CFLAGS)
 
 stats:
-	g++ $(CFLAGS) -o stats statistics_test.cpp
+	g++ -o stats statistics_test.cpp $(CFLAGS) 
 
 linreg:
-	g++ $(CFLAGS) -o linreg LinearRegression.cpp
+	g++ -o linreg LinearRegression.cpp $(CFLAGS) 
+
 
 dt:
-	g++ $(CFLAGS) -o dt DataTableTest.cpp
+	g++ -o dt DataTableTest.cpp  $(CFLAGS) 
 
 mr:
-	g++ $(CFLAGS) -o mr MultipleRegressionTest.cpp
+	g++ -o mr MultipleRegressionTest.cpp $(CFLAGS)
 
 clean:
 	rm -rf *.o stats linreg nn armadillo_test

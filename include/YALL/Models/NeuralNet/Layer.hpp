@@ -5,6 +5,8 @@
 
 #include <armadillo>
 #include <memory>
+#include <random>
+#include <math.h>
 
 namespace yall
 {

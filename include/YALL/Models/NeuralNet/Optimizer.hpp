@@ -18,15 +18,15 @@ namespace yall
             /*! A function to determine what the weight updates should be, i.e. sets
              *  the values in the _del_w array.
              */
-            virtual void calculate_updates(std::vector<Layer> &layers, double *outputs, double* targets, int output_size) = 0;
+            virtual void calculate_updates(std::vector<Layer> &layers, double loss) = 0;
             /*! A function to apply the _del_w weight updates. 
             */
             virtual void apply_updates(std::vector<Layer> &layers) = 0;
             /*! A function that calculate weight update values and applies them.
             */
-            void update_and_apply(std::vector<Layer> &layers, double* outputs, double* targets, int output_size)
+            void update_and_apply(std::vector<Layer> &layers, double loss)
             {
-                calculate_updates(layers, outputs, targets, output_size);
+                calculate_updates(layers, loss);
                 apply_updates(layers);
             }
 

@@ -18,6 +18,7 @@ namespace yall
         public:
             // constructors/destructors
             DataTable();
+            DataTable(double** data, int nrows, int ncols);
             DataTable(std::string csv_file_name, std::string response_column="", bool has_headers=true);
             DataTable(std::string* headers, std::string response_name, double** data, int nrows, int ncols, bool has_headers=true);
             DataTable(std::string* headers, int response_column, double** data, int nrows, int ncols, bool has_headers=true);

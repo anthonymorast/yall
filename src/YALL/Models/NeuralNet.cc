@@ -21,7 +21,6 @@ namespace yall
 
         int prev_size = (_layer_count == 0) ? _input_size : _layers.back().layer_width();
         Layer l(width, prev_size, activation, weights);
-        l.get_weights().print(std::cout);
         _layers.push_back(l);
         _layer_count++;
     }
@@ -56,26 +55,32 @@ namespace yall
             return;
         }
 
-        batch_size = 1;		// TODO: remove when batching is implemented
         _optimizer = optimizer;
-
+        DataTable dummy(inputs, training_size, _input_size);
         for(int e_count = 0; e_count < epochs; e_count++)
         {
+            // WATCH: if we change from storing pointers in DataTable need to update this
+            dummy.shuffle_rows();   // should suffle **inputs since we store the pointer.
             for(int sample_count = 0; sample_count < training_size; /*None*/)
             {
-                //TODO: is my understanding of batching correct? Don't allow batching until we know...
                 // if the # samples is not evenly divisible by the batch size, update batch size
-                // NOTE: it was, just need to implement
                 batch_size = ((sample_count + batch_size) >= training_size) 
                     ? (training_size - sample_count) 
                     : batch_size;
+                double batch_loss;
                 for(int batch_count = 0; batch_count < batch_size; batch_count++)
                 {
                     arma::mat sample(inputs[sample_count], _input_size, 1);
                     double* output = forward_prop(sample);
-                    optimize(targets[sample_count], output);
+                    double* target = targets[sample_count];
+                    for(int i = 0; i < _output_size; i++)
+                    {
+                        batch_loss += (output[i] - target[i]);
+                    }
                     sample_count++;
                 }
+                batch_loss /= batch_size;
+                optimize(batch_loss);
             }	
         }
 
@@ -127,16 +132,9 @@ namespace yall
     {
         double* outputs = new double[_output_size];
         arma::mat last = sample;
-        std::cout << "input shape: " << sample.n_rows << ", " << sample.n_cols << std::endl;
         for(auto it = _layers.begin(); it != _layers.end(); it++)
         {
-            std::cout << "forward pass: " << (*it).layer_width() << std::endl;
-            last.print(std::cout);
             last = (*it).feed_forward(last);
-            std::cout << "layer weights: " << (*it).get_weights().n_rows << ", " << (*it).get_weights().n_cols << std::endl;
-            (*it).get_weights().print(std::cout);
-            std::cout << "after mult:" << std::endl;
-            last.print(std::cout);
         }
 
         // last should be a vector
@@ -150,10 +148,10 @@ namespace yall
         return outputs;
     }
 
-    void NeuralNet::optimize(double* target, double* output)
+    void NeuralNet::optimize(double loss)
     {
         // rely on the BackPropagation class implementations to do the heavy lifting
-        _optimizer->update_and_apply(_layers, output, target, _output_size); 
+        _optimizer->update_and_apply(_layers, loss); 
     }
 
 }

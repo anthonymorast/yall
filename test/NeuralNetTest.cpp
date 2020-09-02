@@ -27,7 +27,20 @@ int main(int argc, char *argv[])
 	std::shared_ptr<yall::Activation> sigmoid = std::make_shared<yall::SigmoidActivation>();
 	std::shared_ptr<yall::Activation> sigmoid2 = std::make_shared<yall::SigmoidActivation>();
 	std::shared_ptr<yall::Activation> linear = std::make_shared<yall::LinearActivation>();
-	std::shared_ptr<yall::Optimizer> gDesc = std::make_shared<yall::BackPropagation>(0.1);
+	std::shared_ptr<yall::Optimizer> gDesc = std::make_shared<yall::BackPropagation>(0.25);
+
+    yall::DataTable xortable("xordata.csv", "y");
+    yall::NeuralNet xornn(2, 1);
+    xornn.add_layer(3, sigmoid);
+    xornn.add_layer(1, sigmoid);
+    xornn.train(xortable, gDesc, 10000, 10);
+    double** xorout = xornn.predict(xortable);
+    double* xoract = xortable.get_response();
+    for(int i = 0; i < xortable.nrows(); i++)
+    {
+        cout << xorout[i][0] << " " << xoract[i] << endl;
+    }
+
 /*	yall::NeuralNet nn(2, 1);
 	nn.add_layer(3, sigmoid);				// add one hidden layer(s)
 	nn.add_layer(5, sigmoid);
@@ -43,7 +56,7 @@ int main(int argc, char *argv[])
 	outputs = nn.predict(inputs, 4);
 	for(int i = 0; i < 4; i++)
 		cout << outputs[i][0] << endl;*/
-
+/*
     cout << "\n\n--------------------IRIS--------------------\n\n";
 
     yall::DataTable table("iris.data", "class");
@@ -59,10 +72,10 @@ int main(int argc, char *argv[])
     table.print_shape(cout);
 
     yall::NeuralNet iris_nn(train.ncols() - 1, 1);
-    iris_nn.add_layer(10, linear);
-//    iris_nn.add_layer(2, sigmoid2);
+    iris_nn.add_layer(5, sigmoid2);
+    iris_nn.add_layer(5, sigmoid2);
     iris_nn.add_layer(1, linear);
-    iris_nn.train(train, gDesc, 500);
+    iris_nn.train(train, gDesc, 5000, 32);
 
     double** iris_out = iris_nn.predict(test);
     double* iris_act = test.get_response();
@@ -70,7 +83,7 @@ int main(int argc, char *argv[])
     {
         cout << "Actual: " << iris_act[i] << "\tPredicted: " << iris_out[i][0] << endl;
     }
-
+*/
     /*---------- Contrived Example: https://hmkcode.com/ai/backpropagation-step-by-step/ */
 /*    double** input = new double*[1];
     input[0] = new double[2];

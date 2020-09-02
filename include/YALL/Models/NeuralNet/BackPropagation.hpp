@@ -10,40 +10,24 @@ namespace yall
     {
         public:
             BackPropagation(double learning_rate) { _learning_rate = learning_rate; }
-            virtual void calculate_updates(std::vector<Layer> &layers, double *output, double* target, int output_size);
+            virtual void calculate_updates(std::vector<Layer> &layers, double loss);
             virtual void apply_updates(std::vector<Layer> &layers);
         private:
             double _learning_rate;
     };
 
-    void BackPropagation::calculate_updates(std::vector<Layer> &layers, double* output, double* target, int output_size)
+    void BackPropagation::calculate_updates(std::vector<Layer> &layers, double loss)
     {
         // Notes: https://sudeepraja.github.io/Neural/  + about 10 books
-
-        //TODO: allow user to specify loss function.
-        // for now I'm using 0.5*(y_hat - y)^21
         Layer output_layer = layers.back();
-        arma::mat delta = output_layer.apply_activation_derivative();
-        std::cout << "output act der: " << delta[0] << std::endl;
-        std::cout << "output: " << output[0] << std::endl;
-        for(int i = 0; i < output_size; i++)
-        {
-            // loss derivative * activation derivative
-            delta[i] *= (output[i] - target[i]);
-        }
-        std::cout << (output[0] - target[0]) << std::endl;
-        std::cout << "output*act der*loss der: " << delta[0] << std::endl;
-       
+        arma::mat delta = output_layer.apply_activation_derivative() * loss;
+
         int count = 0; 
         for(auto it = layers.rbegin(); it != layers.rend(); it++)
         {
             Layer &layer = *it;
             arma::mat dedwi = delta*layer.get_input().t();
-            std::cout << "dedwi: " << std::endl; 
-            dedwi.print(std::cout);
             arma::mat ldeltas = _learning_rate * dedwi;
-            std::cout << "deltas: " << std::endl;
-            ldeltas.print(std::cout);
             layer.set_deltas(ldeltas);
 
             // update delta: delta = (current layer weights)*delta (hadamard) (previous layer activation derivatives)
@@ -57,7 +41,15 @@ namespace yall
             {
                 last_value = (*(it+1)).apply_activation_derivative();
             }
-            
+           
+            if(count == 0)
+            {
+                std::cout << "output layer weights:" << std::endl;
+                layer.get_weights().print(std::cout);
+                std::cout << "deltas:" << std::endl;
+                ldeltas.print(std::cout);
+            }
+             
             delta = (layer.get_weights().t() * delta) % last_value;
             count++;
         }
@@ -68,12 +60,7 @@ namespace yall
         int dummy;
         for(auto it = layers.begin(); it != layers.end(); it++)
         {
-            std::cout << "before update: " << (*it).layer_width() << std::endl;
-            (*it).get_weights().print(std::cout);
             (*it).update_weights();
-            std::cout << "after update: " << (*it).layer_width() << std::endl;
-            (*it).get_weights().print(std::cout);
-            std::cin >> dummy;
         }
     }
 }

@@ -45,7 +45,7 @@ namespace yall
 
             /* Private Methods */
             double* forward_prop(arma::mat sample);
-            void optimize(double* targets, double* output);
+            void optimize(double loss);
     };
 
 }

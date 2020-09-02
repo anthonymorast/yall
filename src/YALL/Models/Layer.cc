@@ -6,7 +6,7 @@ namespace yall
     {
         if(weights != 0)
         {
-            // TODO: test the weight loading in add_layer() 
+            // TODO: add biases 
             // flatten the array 
             double *w_vals = new double[previous_width * width];
             for(int i = 0; i < previous_width; i++)
@@ -22,8 +22,13 @@ namespace yall
             delete[] w_vals;
         }
         else 
-        {	
-            _weights = arma::randu(width, previous_width);
+        {
+            // -1/sqrt(n) < w < 1/sqrt(n)
+            _weights = arma::mat(width, previous_width);
+            std::mt19937 engine;
+            double n = 1/sqrt(previous_width); 
+            std::uniform_real_distribution<double> distribution(-n, n);
+            _weights.imbue([&]() { return distribution(engine); });
         }
 
         _activation = activation;

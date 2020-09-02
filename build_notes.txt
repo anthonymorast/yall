@@ -10,4 +10,10 @@ Linking Errors:
 	  able to get the thing to run.
 	- running "ldd <executable>" is a good way to debug this.
 
+Weird Erros:
+	- on Ubuntu 19.04 I am getting errors building via
+	  	g++ -lYALL -larmadillo NeuralNetTest.cpp
+	  but the build works fine via 
+	    g++ NeuralNetTest.cpp -lYALL -larmadillo
 
+	  I believe either way works on Raspbian (not sure which version...).
